@@ -89,33 +89,75 @@ Orchestrator delivers final results to user
 
 ### 1. Lead Scout 🔍
 - **Purpose**: Find distressed properties and motivated sellers
-- **Tools**: Browser automation, webhooks, public records
+- **Tools**: Browser automation, webhooks, public records, memory tools
 - **Output**: Qualified lead lists with property data
+- **Memory Usage**: Stores lead sources, successful search patterns, seller contact history
 
 ### 2. Market Analyst 📊
 - **Purpose**: Analyze deals, calculate ARV, estimate repairs
-- **Tools**: Browser (comps research), calculator
+- **Tools**: Browser (comps research), calculator, memory tools
 - **Output**: Deal analysis reports with buy recommendations
+- **Memory Usage**: Stores comp data, repair estimates, market trends
 
 ### 3. Acquisition Manager 🤝
 - **Purpose**: Contact sellers, negotiate prices, secure contracts
-- **Tools**: WhatsApp, Telegram, phone (Talk Mode)
+- **Tools**: WhatsApp, Telegram, phone (Talk Mode), memory tools
 - **Output**: Signed purchase agreements
+- **Memory Usage**: Stores negotiation tactics, seller preferences, contact history
 
 ### 4. Title Researcher 📋
 - **Purpose**: Verify clear title, find liens, check for issues
-- **Tools**: Browser (county records), document analysis
+- **Tools**: Browser (county records), document analysis, memory tools
 - **Output**: Title reports, due diligence checklists
+- **Memory Usage**: Stores title company contacts, common issues, county resources
 
 ### 5. Dispositions Manager 💰
 - **Purpose**: Market deals to investor buyers
-- **Tools**: Multi-channel messaging, CRM
+- **Tools**: Multi-channel messaging, CRM, memory tools
 - **Output**: Assignment contracts, closed deals
+- **Memory Usage**: Stores buyer list, buyer preferences, deal history
 
 ### 6. Transaction Coordinator 📝
 - **Purpose**: Manage closing process, documents
-- **Tools**: Document tools, calendar
+- **Tools**: Document tools, calendar, memory tools
 - **Output**: Closing checklists, completed deals
+- **Memory Usage**: Stores closing procedures, vendor contacts, timeline templates
+
+## Memory System
+
+All agents share access to the memory system via `memory_search` and `memory_get` tools.
+
+### Memory Files
+
+| File | Purpose |
+|------|---------|
+| `MEMORY.md` | Long-term memories (buyer list, criteria, lessons learned) |
+| `memory/YYYY-MM-DD.md` | Daily logs and running context |
+| `deals/*.md` | Individual deal files |
+
+### How Agents Use Memory
+
+```
+User: "What buyers do I have for properties under $200K?"
+        │
+        ▼
+ORCHESTRATOR: memory_search("buyers under $200K")
+        │
+        ▼
+Returns: Buyer list from MEMORY.md
+        │
+        ▼
+ORCHESTRATOR: "You have 3 buyers for properties under $200K..."
+```
+
+### Writing to Memory
+
+Tell the agent to remember something:
+- "Remember this: [info]"
+- "Add to memory: [info]"
+- "Save this buyer: [details]"
+
+The agent will write to the appropriate memory file.
 
 ## Communication Protocol
 

@@ -19,6 +19,14 @@
         allowAgents: ["*"],  // Allow spawning any of the agents below
         maxConcurrent: 5,  // Max 5 sub-agents at once
       },
+      // Memory configuration using QMD for semantic search
+      memorySearch: {
+        enabled: true,
+        provider: "openai",  // Uses OpenAI embeddings (requires API key)
+        model: "text-embedding-3-small",
+        fallback: "openai",
+        sync: { watch: true },  // Auto-index on file changes
+      },
     },
     list: [
       {
@@ -27,7 +35,7 @@
         workspace: "~/.openclaw/workspace",
         model: "anthropic/claude-sonnet-4-5",
         tools: {
-          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send"],
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "memory_search", "memory_get"],
         },
       },
       {
@@ -36,7 +44,7 @@
         workspace: "~/.openclaw/workspace",
         model: "anthropic/claude-sonnet-4-5",
         tools: {
-          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send"],
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "memory_search", "memory_get"],
         },
       },
       {
@@ -45,7 +53,7 @@
         workspace: "~/.openclaw/workspace",
         model: "anthropic/claude-sonnet-4-5",
         tools: {
-          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "message"],
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "message", "memory_search", "memory_get"],
         },
       },
       {
@@ -54,7 +62,7 @@
         workspace: "~/.openclaw/workspace",
         model: "anthropic/claude-sonnet-4-5",
         tools: {
-          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send"],
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "memory_search", "memory_get"],
         },
       },
       {
@@ -63,7 +71,7 @@
         workspace: "~/.openclaw/workspace",
         model: "anthropic/claude-sonnet-4-5",
         tools: {
-          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "message"],
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "message", "memory_search", "memory_get"],
         },
       },
       {
@@ -72,10 +80,27 @@
         workspace: "~/.openclaw/workspace",
         model: "anthropic/claude-sonnet-4-5",
         tools: {
-          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send"],
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "memory_search", "memory_get"],
         },
       },
     ],
+  },
+
+  // QMD backend for local-first semantic search (alternative to OpenAI embeddings)
+  // Install QMD: bun install -g https://github.com/tobi/qmd
+  memory: {
+    backend: "qmd",  // Use QMD for local-first BM25 + vector search
+    citations: "auto",
+    qmd: {
+      includeDefaultMemory: true,
+      update: { interval: "5m", debounceMs: 15000 },
+      limits: { maxResults: 10, timeoutMs: 5000 },
+      // Add your Obsidian vault or other note directories
+      paths: [
+        // { name: "obsidian", path: "~/Documents/Obsidian/MyVault", pattern: "**/*.md" },
+        // { name: "deals", path: "~/.openclaw/workspace/deals", pattern: "**/*.md" },
+      ],
+    },
   },
 
   channels: {
@@ -105,6 +130,7 @@
     sessions: { enabled: true },
     cron: { enabled: true },
     webhook: { enabled: true },
+    memory: { enabled: true },  // Enable memory tools
   },
 
   automation: {
