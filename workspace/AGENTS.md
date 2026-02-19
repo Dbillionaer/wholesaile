@@ -159,6 +159,89 @@ Tell the agent to remember something:
 
 The agent will write to the appropriate memory file.
 
+## Deal Pipeline Tracker
+
+### Pipeline Stages
+
+```
+┌─────────────┐   ┌─────────────┐   ┌─────────────────┐   ┌─────────────┐
+│  NEW LEAD   │ → │  CONTACTED  │ → │ UNDER CONTRACT  │ → │ TITLE CLEAR │
+│     🔍      │   │     📞      │   │       ✍️        │   │     📋      │
+└─────────────┘   └─────────────┘   └─────────────────┘   └─────────────┘
+                                                                │
+┌─────────────┐   ┌─────────────┐   ┌─────────────────┐         │
+│   CLOSED    │ ← │  ASSIGNED   │ ← │    MARKETING    │ ←───────┘
+│     💰      │   │     🤝      │   │       📢        │
+└─────────────┘   └─────────────┘   └─────────────────┘
+```
+
+### Stage Definitions
+
+| Stage | Description | Target Days |
+|-------|-------------|-------------|
+| `new-lead` | Property identified, not yet contacted | 1 day |
+| `contacted` | Initial outreach made, waiting response | 3 days |
+| `under-contract` | Purchase agreement signed | 7 days |
+| `title-clear` | Title verified, ready to market | 3 days |
+| `marketing` | Deal blasted to buyers | 5 days |
+| `assigned` | Buyer found, assignment signed | 3 days |
+| `closed` | Transaction complete, fee collected | - |
+
+### Creating a New Deal
+
+```
+You: "New lead: 123 Main St, asking $180K, 3/2, needs work"
+        │
+        ▼
+ORCHESTRATOR creates: deals/2026-02-19-123-main-st.md
+        │
+        ▼
+Agent fills in template with property details
+        │
+        ▼
+Status set to: new-lead
+```
+
+### Checking Pipeline Status
+
+```
+You: "What's my pipeline?"
+        │
+        ▼
+ORCHESTRATOR: memory_search("deals status:")
+        │
+        ▼
+Returns: All deals grouped by status
+        │
+        ▼
+ORCHESTRATOR: "You have 2 new leads, 1 under contract, 1 in marketing..."
+```
+
+### Stale Deal Alerts
+
+Automated cron job checks for deals stuck too long:
+
+```
+Cron (Daily 8 AM): Check all deals
+        │
+        ▼
+If deal in "contacted" > 3 days → Alert: "Follow up with [address]"
+If deal in "marketing" > 5 days → Alert: "Reduce price or find new buyers"
+        │
+        ▼
+Send alert via WhatsApp/Telegram
+```
+
+### Deal File Template
+
+See `deals/.deal-template.md` for the full deal file structure.
+
+To create a new deal:
+1. Copy `.deal-template.md`
+2. Rename to `YYYY-MM-DD-address.md`
+3. Fill in property and seller details
+4. Update status as deal progresses
+
 ## Communication Protocol
 
 Agents communicate via `sessions_send`:

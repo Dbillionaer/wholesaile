@@ -135,11 +135,58 @@
 
   automation: {
     cron: [
+      // === DEAL PIPELINE AUTOMATION ===
       {
-        id: "morning-lead-scan",
-        schedule: "0 8 * * *",
+        id: "stale-deal-check",
+        schedule: "0 8 * * *",  // Daily at 8 AM
         session: "main",
-        message: "Run morning lead scan for new properties",
+        message: "Check all deals in the pipeline for stale status. Alert on deals stuck in 'contacted' >3 days, 'under-contract' >7 days, or 'marketing' >5 days. Suggest follow-up actions.",
+      },
+      {
+        id: "pipeline-summary",
+        schedule: "0 18 * * *",  // Daily at 6 PM
+        session: "main",
+        message: "Summarize today's pipeline activity: new leads, status changes, deals closed. Write summary to memory.",
+      },
+      
+      // === LEAD GENERATION AUTOMATION ===
+      {
+        id: "morning-zillow-scan",
+        schedule: "0 7 * * *",  // Daily at 7 AM
+        session: "main",
+        message: "Scan Zillow for new listings and price drops in target ZIP codes. Filter by: under $300K, listed >30 days, or price reduced >10%. Create new deal files for matches.",
+      },
+      {
+        id: "county-records-check",
+        schedule: "0 9 * * 1",  // Weekly Monday 9 AM
+        session: "main",
+        message: "Check county records for new distress indicators: tax delinquent properties, code violations, probate filings, and pre-foreclosures in target areas.",
+      },
+      {
+        id: "expired-listings-check",
+        schedule: "0 10 * * *",  // Daily at 10 AM
+        session: "main",
+        message: "Check for recently expired MLS listings in target ZIP codes. These are motivated sellers who tried to sell but failed. Create leads for follow-up.",
+      },
+      {
+        id: "price-drop-alerts",
+        schedule: "0 */4 * * *",  // Every 4 hours
+        session: "main",
+        message: "Check watched properties for price drops. Alert if any property drops below our MAO threshold.",
+      },
+      
+      // === FOLLOW-UP REMINDERS ===
+      {
+        id: "seller-follow-up",
+        schedule: "0 10 * * *",  // Daily at 10 AM
+        session: "main",
+        message: "Review all deals in 'contacted' status. Identify sellers who haven't been contacted in 3+ days. Suggest follow-up messages.",
+      },
+      {
+        id: "buyer-outreach",
+        schedule: "0 14 * * 3",  // Wednesday 2 PM
+        session: "main",
+        message: "Review deals in 'marketing' status. Check if all qualified buyers have been contacted. Suggest additional outreach if needed.",
       },
     ],
   },
