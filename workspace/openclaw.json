@@ -19,12 +19,11 @@
         allowAgents: ["*"],  // Allow spawning any of the agents below
         maxConcurrent: 5,  // Max 5 sub-agents at once
       },
-      // Memory configuration using QMD for semantic search
+      // Memory configuration - QMD handles embeddings locally
+      // No OpenAI API key needed for memory search when using QMD
       memorySearch: {
         enabled: true,
-        provider: "openai",  // Uses OpenAI embeddings (requires API key)
-        model: "text-embedding-3-small",
-        fallback: "openai",
+        provider: "local",  // QMD uses local embeddings
         sync: { watch: true },  // Auto-index on file changes
       },
     },
@@ -97,8 +96,10 @@
       limits: { maxResults: 10, timeoutMs: 5000 },
       // Add your Obsidian vault or other note directories
       paths: [
+        // Uncomment to index your Obsidian vault:
         // { name: "obsidian", path: "~/Documents/Obsidian/MyVault", pattern: "**/*.md" },
-        // { name: "deals", path: "~/.openclaw/workspace/deals", pattern: "**/*.md" },
+        // Index deal files for searchability
+        { name: "deals", path: "~/.openclaw/workspace/deals", pattern: "**/*.md" },
       ],
     },
   },
@@ -134,6 +135,28 @@
   },
 
   automation: {
+    // Webhooks for real-time lead ingestion from external sources
+    webhooks: [
+      {
+        id: "driving-for-dollars",
+        path: "/leads/dfd",
+        session: "main",
+        description: "Receive leads from driving for dollars apps",
+      },
+      {
+        id: "direct-mail-responses",
+        path: "/leads/mail",
+        session: "main",
+        description: "Receive responses from direct mail campaigns",
+      },
+      {
+        id: "ppc-leads",
+        path: "/leads/ppc",
+        session: "main",
+        description: "Receive leads from PPC campaigns",
+      },
+    ],
+    
     cron: [
       // === DEAL PIPELINE AUTOMATION ===
       {
