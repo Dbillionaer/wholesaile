@@ -12,7 +12,70 @@
         "anthropic/claude-sonnet-4-5": { alias: "Sonnet" },
         "openai/gpt-5.2": { alias: "GPT" },
       },
+      // Orchestrator pattern: main agent can spawn specialized sub-agents
+      subagents: {
+        model: "anthropic/claude-sonnet-4-5",  // Cheaper model for worker agents
+        maxSpawnDepth: 1,  // Allow orchestrator → workers
+        allowAgents: ["*"],  // Allow spawning any of the agents below
+        maxConcurrent: 5,  // Max 5 sub-agents at once
+      },
     },
+    list: [
+      {
+        id: "lead-scout",
+        emoji: "🔍",
+        workspace: "~/.openclaw/workspace",
+        model: "anthropic/claude-sonnet-4-5",
+        tools: {
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send"],
+        },
+      },
+      {
+        id: "market-analysis",
+        emoji: "📊",
+        workspace: "~/.openclaw/workspace",
+        model: "anthropic/claude-sonnet-4-5",
+        tools: {
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send"],
+        },
+      },
+      {
+        id: "acquisition",
+        emoji: "🤝",
+        workspace: "~/.openclaw/workspace",
+        model: "anthropic/claude-sonnet-4-5",
+        tools: {
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "message"],
+        },
+      },
+      {
+        id: "title-research",
+        emoji: "📋",
+        workspace: "~/.openclaw/workspace",
+        model: "anthropic/claude-sonnet-4-5",
+        tools: {
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send"],
+        },
+      },
+      {
+        id: "dispositions",
+        emoji: "💰",
+        workspace: "~/.openclaw/workspace",
+        model: "anthropic/claude-sonnet-4-5",
+        tools: {
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "message"],
+        },
+      },
+      {
+        id: "transaction-coord",
+        emoji: "📝",
+        workspace: "~/.openclaw/workspace",
+        model: "anthropic/claude-sonnet-4-5",
+        tools: {
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send"],
+        },
+      },
+    ],
   },
 
   channels: {

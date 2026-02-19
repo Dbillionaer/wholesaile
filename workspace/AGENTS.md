@@ -1,14 +1,22 @@
 # Wholesale Real Estate Multi-Agent System
 
-This workspace configures a team of specialized AI agents for wholesale real estate operations using OpenClaw.
+This workspace configures a team of specialized AI agents for wholesale real estate operations using OpenClaw's **orchestrator pattern**.
 
-## Agent Architecture
+## Orchestrator Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     ORCHESTRATOR (Main)                         │
+│                     ORCHESTRATOR (Main Agent)                   │
 │                   Your Central Command                          │
+│                                                                 │
+│  • Receives all incoming messages (WhatsApp, Telegram, etc.)   │
+│  • Analyzes requests and decides which agent to spawn          │
+│  • Uses sessions_spawn to delegate tasks                        │
+│  • Collects results and delivers to user                        │
+│  • Model: claude-opus-4-6 (high intelligence)                   │
 └─────────────────────┬───────────────────────────────────────────┘
+                      │
+                      │ sessions_spawn({ agentId: "lead-scout", task: "..." })
                       │
         ┌─────────────┼─────────────┬─────────────┬──────────────┐
         │             │             │             │              │
@@ -16,7 +24,65 @@ This workspace configures a team of specialized AI agents for wholesale real est
 ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌────────────┐
 │   LEAD    │ │  MARKET   │ │ACQUISITION│ │  TITLE    │ │DISPOSITIONS│
 │   SCOUT   │ │ ANALYST   │ │  MANAGER  │ │ RESEARCHER│ │  MANAGER   │
+│    🔍     │ │    📊     │ │    🤝     │ │    📋     │ │     💰     │
+│ (subagent)│ │ (subagent)│ │ (subagent)│ │ (subagent)│ │ (subagent) │
+│  Sonnet   │ │  Sonnet   │ │  Sonnet   │ │  Sonnet   │ │   Sonnet   │
 └───────────┘ └───────────┘ └───────────┘ └───────────┘ └────────────┘
+                      │
+                      │ Announces results back
+                      ▼
+              ┌───────────────┐
+              │  ORCHESTRATOR │
+              │  delivers to  │
+              │     USER      │
+              └───────────────┘
+```
+
+## How Coordination Works
+
+### 1. User Sends Message
+```
+User (WhatsApp): "Find me deals in ZIP 90210 under $300k"
+        │
+        ▼
+   ORCHESTRATOR receives message
+```
+
+### 2. Orchestrator Spawns Sub-Agent
+```
+Orchestrator analyzes request → Decides "lead-scout" is needed
+
+sessions_spawn({
+  agentId: "lead-scout",
+  task: "Find distressed properties in ZIP 90210 under $300k",
+  model: "anthropic/claude-sonnet-4-5"
+})
+```
+
+### 3. Sub-Agent Works & Reports Back
+```
+lead-scout runs → Searches Zillow, Redfin, county records
+        │
+        ▼
+Announces results back to Orchestrator:
+"Found 5 potential leads: [property details...]"
+```
+
+### 4. Orchestrator May Chain Agents
+```
+Orchestrator: "Good leads! Now analyze them."
+        │
+        ▼
+sessions_spawn({
+  agentId: "market-analysis",
+  task: "Analyze these 5 properties for ARV and MAO"
+})
+        │
+        ▼
+market-analysis reports back with deal analysis
+        │
+        ▼
+Orchestrator delivers final results to user
 ```
 
 ## Agent Roles
