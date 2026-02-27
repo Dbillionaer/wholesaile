@@ -1,6 +1,12 @@
 {
   // OpenClaw Configuration for Wholesale Real Estate Multi-Agent System
   // Copy to ~/.openclaw/openclaw.json and customize
+  //
+  // KNOWLEDGE BASE SETUP:
+  // 1. Clone the knowledge base: git clone https://github.com/Dbillionaer/wholesaile-kb ~/Documents/wholesale-kb
+  // 2. Open it as an Obsidian vault: File → Open Vault → ~/Documents/wholesale-kb
+  // 3. Install QMD: bun install -g https://github.com/tobi/qmd
+  // 4. QMD will auto-index the vault via the paths below
   
   agents: {
     defaults: {
@@ -12,19 +18,16 @@
         "anthropic/claude-sonnet-4-5": { alias: "Sonnet" },
         "openai/gpt-5.2": { alias: "GPT" },
       },
-      // Orchestrator pattern: main agent can spawn specialized sub-agents
       subagents: {
-        model: "anthropic/claude-sonnet-4-5",  // Cheaper model for worker agents
-        maxSpawnDepth: 1,  // Allow orchestrator → workers
-        allowAgents: ["*"],  // Allow spawning any of the agents below
-        maxConcurrent: 5,  // Max 5 sub-agents at once
+        model: "anthropic/claude-sonnet-4-5",
+        maxSpawnDepth: 1,
+        allowAgents: ["*"],
+        maxConcurrent: 5,
       },
-      // Memory configuration - QMD handles embeddings locally
-      // No OpenAI API key needed for memory search when using QMD
       memorySearch: {
         enabled: true,
-        provider: "local",  // QMD uses local embeddings
-        sync: { watch: true },  // Auto-index on file changes
+        provider: "local",
+        sync: { watch: true },
       },
     },
     list: [
@@ -85,21 +88,75 @@
     ],
   },
 
-  // QMD backend for local-first semantic search (alternative to OpenAI embeddings)
+  // QMD backend for local-first semantic search
   // Install QMD: bun install -g https://github.com/tobi/qmd
   memory: {
-    backend: "qmd",  // Use QMD for local-first BM25 + vector search
+    backend: "qmd",
     citations: "auto",
     qmd: {
       includeDefaultMemory: true,
       update: { interval: "5m", debounceMs: 15000 },
       limits: { maxResults: 10, timeoutMs: 5000 },
-      // Add your Obsidian vault or other note directories
       paths: [
-        // Uncomment to index your Obsidian vault:
-        // { name: "obsidian", path: "~/Documents/Obsidian/MyVault", pattern: "**/*.md" },
-        // Index deal files for searchability
-        { name: "deals", path: "~/.openclaw/workspace/deals", pattern: "**/*.md" },
+        // ─── KNOWLEDGE BASE (Obsidian Vault) ───────────────────────────────
+        // Clone: git clone https://github.com/Dbillionaer/wholesaile-kb ~/Documents/wholesale-kb
+        // Then open ~/Documents/wholesale-kb as an Obsidian vault
+        {
+          name: "kb-playbooks",
+          path: "~/Documents/wholesale-kb",
+          pattern: "*.md",
+          description: "Strategy playbooks and reference guides"
+        },
+        {
+          name: "kb-transcripts-cash",
+          path: "~/Documents/wholesale-kb/cash_deals",
+          pattern: "**/*.md",
+          description: "Cash deal call transcripts"
+        },
+        {
+          name: "kb-transcripts-seller-finance",
+          path: "~/Documents/wholesale-kb/seller_finance",
+          pattern: "**/*.md",
+          description: "Seller finance call transcripts"
+        },
+        {
+          name: "kb-transcripts-creative",
+          path: "~/Documents/wholesale-kb/creative_finance",
+          pattern: "**/*.md",
+          description: "Creative finance (Subject-To, Hybrid) call transcripts"
+        },
+        {
+          name: "kb-agent-lessons",
+          path: "~/Documents/wholesale-kb/agent-lessons",
+          pattern: "**/*.md",
+          description: "Lessons learned from real deals (written by agents)"
+        },
+        {
+          name: "kb-market-data",
+          path: "~/Documents/wholesale-kb/market-data",
+          pattern: "**/*.md",
+          description: "Comp data, ARV notes, market trends"
+        },
+        {
+          name: "kb-buyer-profiles",
+          path: "~/Documents/wholesale-kb/buyer-profiles",
+          pattern: "**/*.md",
+          description: "Buyer preferences and history"
+        },
+        // ─── DEAL PIPELINE ─────────────────────────────────────────────────
+        {
+          name: "deals",
+          path: "~/.openclaw/workspace/deals",
+          pattern: "**/*.md",
+          description: "Active deal pipeline files"
+        },
+        // ─── WORKSPACE MEMORY ──────────────────────────────────────────────
+        {
+          name: "workspace-memory",
+          path: "~/.openclaw/workspace",
+          pattern: "*.md",
+          description: "Agent workspace: MEMORY.md, USER.md, SOUL.md, AGENTS.md"
+        },
       ],
     },
   },
@@ -131,11 +188,10 @@
     sessions: { enabled: true },
     cron: { enabled: true },
     webhook: { enabled: true },
-    memory: { enabled: true },  // Enable memory tools
+    memory: { enabled: true },
   },
 
   automation: {
-    // Webhooks for real-time lead ingestion from external sources
     webhooks: [
       {
         id: "driving-for-dollars",
@@ -158,58 +214,60 @@
     ],
     
     cron: [
-      // === DEAL PIPELINE AUTOMATION ===
       {
         id: "stale-deal-check",
-        schedule: "0 8 * * *",  // Daily at 8 AM
+        schedule: "0 8 * * *",
         session: "main",
         message: "Check all deals in the pipeline for stale status. Alert on deals stuck in 'contacted' >3 days, 'under-contract' >7 days, or 'marketing' >5 days. Suggest follow-up actions.",
       },
       {
         id: "pipeline-summary",
-        schedule: "0 18 * * *",  // Daily at 6 PM
+        schedule: "0 18 * * *",
         session: "main",
         message: "Summarize today's pipeline activity: new leads, status changes, deals closed. Write summary to memory.",
       },
-      
-      // === LEAD GENERATION AUTOMATION ===
       {
         id: "morning-zillow-scan",
-        schedule: "0 7 * * *",  // Daily at 7 AM
+        schedule: "0 7 * * *",
         session: "main",
         message: "Scan Zillow for new listings and price drops in target ZIP codes. Filter by: under $300K, listed >30 days, or price reduced >10%. Create new deal files for matches.",
       },
       {
         id: "county-records-check",
-        schedule: "0 9 * * 1",  // Weekly Monday 9 AM
+        schedule: "0 9 * * 1",
         session: "main",
         message: "Check county records for new distress indicators: tax delinquent properties, code violations, probate filings, and pre-foreclosures in target areas.",
       },
       {
         id: "expired-listings-check",
-        schedule: "0 10 * * *",  // Daily at 10 AM
+        schedule: "0 10 * * *",
         session: "main",
         message: "Check for recently expired MLS listings in target ZIP codes. These are motivated sellers who tried to sell but failed. Create leads for follow-up.",
       },
       {
         id: "price-drop-alerts",
-        schedule: "0 */4 * * *",  // Every 4 hours
+        schedule: "0 */4 * * *",
         session: "main",
         message: "Check watched properties for price drops. Alert if any property drops below our MAO threshold.",
       },
-      
-      // === FOLLOW-UP REMINDERS ===
       {
         id: "seller-follow-up",
-        schedule: "0 10 * * *",  // Daily at 10 AM
+        schedule: "0 10 * * *",
         session: "main",
         message: "Review all deals in 'contacted' status. Identify sellers who haven't been contacted in 3+ days. Suggest follow-up messages.",
       },
       {
         id: "buyer-outreach",
-        schedule: "0 14 * * 3",  // Wednesday 2 PM
+        schedule: "0 14 * * 3",
         session: "main",
         message: "Review deals in 'marketing' status. Check if all qualified buyers have been contacted. Suggest additional outreach if needed.",
+      },
+      // ─── KNOWLEDGE BASE MAINTENANCE ──────────────────────────────────────
+      {
+        id: "kb-weekly-review",
+        schedule: "0 9 * * 0",  // Sunday 9 AM
+        session: "main",
+        message: "Review the knowledge base for gaps. Check: (1) Are there deals closed this week without agent-lessons entries? (2) Is market-data stale (>30 days) for target ZIPs? (3) Are buyer profiles up to date? Suggest updates.",
       },
     ],
   },
