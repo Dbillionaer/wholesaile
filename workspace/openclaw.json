@@ -7,6 +7,7 @@
       model: "anthropic/claude-opus-4-6",
       workspace: "~/.openclaw/workspace",
       thinkingLevel: "high",
+      skill: "skills/orchestrator/SKILL.md",
       models: {
         "anthropic/claude-opus-4-6": { alias: "Opus" },
         "anthropic/claude-sonnet-4-5": { alias: "Sonnet" },
@@ -17,7 +18,7 @@
         model: "anthropic/claude-sonnet-4-5",  // Cheaper model for worker agents
         maxSpawnDepth: 1,  // Allow orchestrator → workers
         allowAgents: ["*"],  // Allow spawning any of the agents below
-        maxConcurrent: 5,  // Max 5 sub-agents at once
+        maxConcurrent: 6,  // Max 6 sub-agents at once (increased for 8-agent team)
       },
       // Memory configuration - QMD handles embeddings locally
       // No OpenAI API key needed for memory search when using QMD
@@ -33,8 +34,9 @@
         emoji: "🔍",
         workspace: "~/.openclaw/workspace",
         model: "anthropic/claude-sonnet-4-5",
+        skill: "skills/lead-scout/SKILL.md",
         tools: {
-          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "memory_search", "memory_get"],
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "webhook", "memory_search", "memory_get"],
         },
       },
       {
@@ -42,6 +44,7 @@
         emoji: "📊",
         workspace: "~/.openclaw/workspace",
         model: "anthropic/claude-sonnet-4-5",
+        skill: "skills/market-analysis/SKILL.md",
         tools: {
           allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "memory_search", "memory_get"],
         },
@@ -51,8 +54,19 @@
         emoji: "🤝",
         workspace: "~/.openclaw/workspace",
         model: "anthropic/claude-sonnet-4-5",
+        skill: "skills/acquisition/SKILL.md",
         tools: {
           allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "message", "memory_search", "memory_get"],
+        },
+      },
+      {
+        id: "skip-tracing",
+        emoji: "🕵️",
+        workspace: "~/.openclaw/workspace",
+        model: "anthropic/claude-sonnet-4-5",
+        skill: "skills/skip-tracing/SKILL.md",
+        tools: {
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "memory_search", "memory_get"],
         },
       },
       {
@@ -60,6 +74,7 @@
         emoji: "📋",
         workspace: "~/.openclaw/workspace",
         model: "anthropic/claude-sonnet-4-5",
+        skill: "skills/title-research/SKILL.md",
         tools: {
           allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "memory_search", "memory_get"],
         },
@@ -69,6 +84,7 @@
         emoji: "💰",
         workspace: "~/.openclaw/workspace",
         model: "anthropic/claude-sonnet-4-5",
+        skill: "skills/dispositions/SKILL.md",
         tools: {
           allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "message", "memory_search", "memory_get"],
         },
@@ -78,8 +94,19 @@
         emoji: "📝",
         workspace: "~/.openclaw/workspace",
         model: "anthropic/claude-sonnet-4-5",
+        skill: "skills/transaction-coord/SKILL.md",
         tools: {
-          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "memory_search", "memory_get"],
+          allow: ["browser", "read", "write", "sessions_spawn", "sessions_send", "message", "memory_search", "memory_get"],
+        },
+      },
+      {
+        id: "kpi-reporter",
+        emoji: "📈",
+        workspace: "~/.openclaw/workspace",
+        model: "anthropic/claude-sonnet-4-5",
+        skill: "skills/kpi-reporter/SKILL.md",
+        tools: {
+          allow: ["read", "write", "sessions_send", "memory_search", "memory_get"],
         },
       },
     ],
@@ -100,6 +127,10 @@
         // { name: "obsidian", path: "~/Documents/Obsidian/MyVault", pattern: "**/*.md" },
         // Index deal files for searchability
         { name: "deals", path: "~/.openclaw/workspace/deals", pattern: "**/*.md" },
+        // Index workspace memory logs
+        { name: "memory", path: "~/.openclaw/workspace/memory", pattern: "**/*.md" },
+        // Index MEMORY.md and USER.md for investment criteria / buyer list queries
+        { name: "workspace-config", path: "~/.openclaw/workspace", pattern: "{MEMORY,USER,SOUL}.md" },
       ],
     },
   },
@@ -163,13 +194,13 @@
         id: "stale-deal-check",
         schedule: "0 8 * * *",  // Daily at 8 AM
         session: "main",
-        message: "Check all deals in the pipeline for stale status. Alert on deals stuck in 'contacted' >3 days, 'under-contract' >7 days, or 'marketing' >5 days. Suggest follow-up actions.",
+        message: "Read all deal files in deals/. Check each deal's status against its target stage duration: new-lead >1 day, contacted >3 days, under-contract >7 days, title-clear >3 days, marketing >5 days, assigned >3 days. For each stale deal, send me an alert with the address, current stage, days in stage, and recommended action. Then spawn acquisition agent for any contacted/follow_up_1 deals that need follow-up.",
       },
       {
         id: "pipeline-summary",
         schedule: "0 18 * * *",  // Daily at 6 PM
         session: "main",
-        message: "Summarize today's pipeline activity: new leads, status changes, deals closed. Write summary to memory.",
+        message: "Spawn the kpi-reporter agent with task: 'Generate daily pipeline summary: count deals by stage, list today's status changes, total MTD revenue, and write summary to memory as pipeline summary [today date]'",
       },
       
       // === LEAD GENERATION AUTOMATION ===
@@ -177,25 +208,33 @@
         id: "morning-zillow-scan",
         schedule: "0 7 * * *",  // Daily at 7 AM
         session: "main",
-        message: "Scan Zillow for new listings and price drops in target ZIP codes. Filter by: under $300K, listed >30 days, or price reduced >10%. Create new deal files for matches.",
+        message: "Spawn the lead-scout agent with task: 'Run daily Zillow and Redfin scan. First check memory for target ZIP codes and investment criteria. Search for: listings >30 days on market, price reductions >10%, and keywords (TLC, as-is, cash only, fixer, estate, probate). Check memory for existing deals to avoid duplicates. Create deal files for any new qualified leads. Report results to orchestrator.'",
       },
       {
         id: "county-records-check",
         schedule: "0 9 * * 1",  // Weekly Monday 9 AM
         session: "main",
-        message: "Check county records for new distress indicators: tax delinquent properties, code violations, probate filings, and pre-foreclosures in target areas.",
+        message: "Spawn the lead-scout agent with task: 'Run weekly county records scan. Check memory for target markets. Search for: (1) tax delinquent properties past due >1 year, (2) new code violation cases, (3) probate filings in the last 30 days, (4) Notice of Default / lis pendens filings. For each distressed property found, check memory for duplicates and create deal files for new qualified leads. Report findings.'",
       },
       {
         id: "expired-listings-check",
         schedule: "0 10 * * *",  // Daily at 10 AM
         session: "main",
-        message: "Check for recently expired MLS listings in target ZIP codes. These are motivated sellers who tried to sell but failed. Create leads for follow-up.",
+        message: "Spawn the lead-scout agent with task: 'Search Redfin and Zillow for listings that expired or went off-market in the last 7 days in target ZIP codes. These are motivated sellers who failed to sell at retail. Check memory for duplicates. Create deal files for any new qualified leads (use investment criteria from memory). Report results.'",
       },
       {
         id: "price-drop-alerts",
         schedule: "0 */4 * * *",  // Every 4 hours
         session: "main",
-        message: "Check watched properties for price drops. Alert if any property drops below our MAO threshold.",
+        message: "Read all deal files with status new-lead or contacted. For each, check if the asking price on the listing has dropped since last checked. If any property asking price has dropped below its MAO (from the deal file financials), alert me immediately: '[ADDRESS] price dropped to $[X] — now at or below MAO of $[MAO]. Recommend contacting seller.' Update deal file with new asking price.",
+      },
+      
+      // === SKIP TRACING AUTOMATION ===
+      {
+        id: "skip-trace-queue",
+        schedule: "0 9 * * *",  // Daily at 9 AM
+        session: "main",
+        message: "Read all deal files in deals/. Find any deals where contact_needed is true OR where seller phone is blank/TBD. For each, spawn the skip-tracing agent with task: 'Find contact info for owner of [ADDRESS] (APN: [APN], Owner: [OWNER NAME from deal file]). Update deal file with findings.'",
       },
       
       // === FOLLOW-UP REMINDERS ===
@@ -203,13 +242,21 @@
         id: "seller-follow-up",
         schedule: "0 10 * * *",  // Daily at 10 AM
         session: "main",
-        message: "Review all deals in 'contacted' status. Identify sellers who haven't been contacted in 3+ days. Suggest follow-up messages.",
+        message: "Read all deal files with status 'contacted' or 'follow_up_1'. For each, check the last contact date in the Stage History. If last contact was >3 days ago, spawn the acquisition agent with task: 'Send follow-up to seller for [ADDRESS]. Read the deal file for contact history and choose the appropriate follow-up script (follow_up_1 if first follow-up, follow_up_2 if second). Update deal file after sending.'",
       },
       {
         id: "buyer-outreach",
         schedule: "0 14 * * 3",  // Wednesday 2 PM
         session: "main",
-        message: "Review deals in 'marketing' status. Check if all qualified buyers have been contacted. Suggest additional outreach if needed.",
+        message: "Spawn the dispositions agent with task: 'Review all deal files with status marketing. For each deal: check if all Tier 1 and Tier 2 buyers have been contacted (check deal file buyer interest table). If any qualified buyers were not yet reached, contact them now with the deal blast. If deal has been in marketing >5 days with no buyer, reduce assignment fee by $3,000–$5,000 and re-blast. Report results.'",
+      },
+      
+      // === WEEKLY REPORTING ===
+      {
+        id: "weekly-kpi-report",
+        schedule: "0 9 * * 1",  // Monday 9 AM
+        session: "main",
+        message: "Spawn the kpi-reporter agent with task: 'Generate the full weekly performance report. Include: conversion funnel rates, revenue vs goal, average deal cycle time, lead source performance, buyer list health, pipeline health score, and 3 specific recommendations for this week. Send report to user and write summary to memory.'",
       },
     ],
   },
