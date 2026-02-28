@@ -129,3 +129,19 @@ Write market observations to knowledge base:
 # ~/Documents/wholesale-kb/market-data/[ZIP]-market-notes.md
 # Note: active flippers, price trends, distress patterns
 ```
+
+## New Sections in Lead Generation Playbook
+
+The Lead_Generation_Playbook.md now includes:
+- **Lead qualification scoring** (High/Medium/Standard priority tiers)
+- **21-day follow-up cadence** with day-by-day contact sequence
+- **Voicemail and text templates** (copy-paste ready)
+- **Skip tracing workflow** with quality benchmarks
+- **Additional lead sources**: probate court, code violations, expired listings, FSBO
+
+Query these with:
+```
+memory_search("lead qualification scoring priority")
+memory_search("follow-up cadence contact sequence")
+memory_search("skip tracing workflow quality")
+```

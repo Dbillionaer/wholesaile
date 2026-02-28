@@ -125,3 +125,24 @@ memory_get("complex_scenario_resolution_guide.md")
 4. Send thank-you to title company and buyer
 5. Request buyer feedback
 6. Update buyer profile with deal history
+
+## New Sections in Closing Process Checklist
+
+The Closing_Process_Checklist.md now includes:
+
+### Wire Fraud Prevention (CRITICAL)
+```
+memory_search("wire fraud prevention protocol real estate")
+```
+**Always verify wire instructions by phone before sending any wire.**
+
+### 21-Day Closing Timeline
+```
+memory_search("21 day closing timeline milestones")
+```
+
+### If the Deal Falls Apart
+```
+memory_search("deal falls apart buyer backs out seller backs out")
+memory_search("earnest money dispute resolution")
+```

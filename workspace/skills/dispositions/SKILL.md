@@ -123,3 +123,27 @@ Key info to capture:
 - Proof of funds status
 - How fast they close
 - Any quirks or preferences
+
+## New Sections in Dispositions Playbook
+
+The Mastering_Dispositions_Playbook.md now includes:
+
+### Buyer Qualification
+Before sending deal details, qualify buyers:
+```
+memory_search("buyer qualification questions POF requirements")
+memory_search("buyer tier system VIP active prospect")
+```
+
+### Deal Blast Templates
+Copy-paste ready templates for WhatsApp, Telegram, and email:
+```
+memory_search("deal blast template WhatsApp Telegram")
+memory_search("deal blast template email format")
+```
+
+### When a Buyer Backs Out
+Protocol for handling buyer default:
+```
+memory_search("buyer backs out assignment agreement protocol")
+```

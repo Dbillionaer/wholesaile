@@ -3,7 +3,7 @@
   // Copy to ~/.openclaw/openclaw.json and customize
   //
   // KNOWLEDGE BASE SETUP:
-  // 1. Clone the knowledge base: git clone https://github.com/Dbillionaer/wholesaile-kb ~/Documents/wholesale-kb
+  // 1. Clone the knowledge base: git clone https://github.com/Dbillionaer/real-estate-knowledge ~/Documents/wholesale-kb
   // 2. Open it as an Obsidian vault: File → Open Vault → ~/Documents/wholesale-kb
   // 3. Install QMD: bun install -g https://github.com/tobi/qmd
   // 4. QMD will auto-index the vault via the paths below
@@ -99,7 +99,7 @@
       limits: { maxResults: 10, timeoutMs: 5000 },
       paths: [
         // ─── KNOWLEDGE BASE (Obsidian Vault) ───────────────────────────────
-        // Clone: git clone https://github.com/Dbillionaer/wholesaile-kb ~/Documents/wholesale-kb
+        // Clone: git clone https://github.com/Dbillionaer/real-estate-knowledge ~/Documents/wholesale-kb
         // Then open ~/Documents/wholesale-kb as an Obsidian vault
         {
           name: "kb-playbooks",

@@ -127,3 +127,36 @@ For financial modeling examples:
 ```
 memory_get("advanced_financial_modeling_examples.md")
 ```
+
+## New Sections in Strategy Playbooks
+
+The strategy playbooks now include critical new sections:
+
+### When to Walk Away
+Each playbook now has a "When to Walk Away" table. Query before making an offer:
+```
+memory_search("when to walk away seller finance deal killers")
+memory_search("when to walk away subject to deal killers")
+memory_search("when to walk away trust acquisition deal killers")
+```
+
+### Strategy Re-Routing (When First Strategy is Rejected)
+The comprehensive_decision_tree.md now has a "Strategy Rejected" section:
+```
+memory_get("comprehensive_decision_tree.md")
+# Then search for "STRATEGY REJECTED" section
+```
+
+### State-Specific Legal Notes
+Subject-To and Trust Acquisition playbooks now have state-specific legal requirements:
+```
+memory_search("state specific legal notes subject to [STATE]")
+memory_search("state specific legal notes trust acquisition [STATE]")
+```
+
+### Hybrid Deal Decision Path
+When to use hybrid (cash + seller finance):
+```
+memory_search("hybrid deal decision path when to use")
+memory_search("hybrid deal structure cash seller finance split")
+```
