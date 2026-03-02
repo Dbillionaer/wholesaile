@@ -160,3 +160,105 @@ When to use hybrid (cash + seller finance):
 memory_search("hybrid deal decision path when to use")
 memory_search("hybrid deal structure cash seller finance split")
 ```
+
+---
+
+## TCPA Compliance — Seller Outreach
+
+> **Legal requirement.** Violations carry fines up to $1,500 per message/call.
+
+### Before Any Outreach — Required Checks
+
+**Step 1: Check do-not-contact list**
+```
+memory_search("do not contact [phone number]")
+memory_search("opt out [phone number]")
+```
+If found → **STOP. Do not contact this number.**
+
+**Step 2: Verify consent exists**
+```
+memory_search("consent [phone number]")
+```
+If no consent record → Only contact if they initiated (inbound call/text/mail response).
+
+**Step 3: Confirm contact time**
+- Only contact between **8 AM – 9 PM** in the seller's local time zone
+- Check seller's address to determine time zone
+
+**Step 4: Prepare opt-out language**
+Every outbound text must include: *"Reply STOP to opt out"*
+
+### Consent Types (What Counts as Consent)
+
+| Situation | Consent? | Notes |
+|-----------|----------|-------|
+| Seller called your number | ✅ Yes | Inbound = consent |
+| Seller responded to your direct mail | ✅ Yes | Response = consent |
+| Seller filled out your web form | ✅ Yes | Form submission = consent |
+| Seller's number from a list you bought | ❌ No | Need prior written consent |
+| Seller's number from county records | ❌ No | Need prior written consent |
+| Seller's number from driving for dollars | ❌ No | Need prior written consent |
+
+### Recording Consent
+
+When a seller provides consent, document it immediately:
+
+```
+# Create consent record in knowledge base
+# File: ~/Documents/wholesale-kb/consent/YYYY-MM-DD-[phone-last4].md
+
+---
+phone: "+15551234567"
+source: "direct_mail_response"
+consent_type: "inbound_call"
+consent_date: "2026-03-02T12:00:00Z"
+consent_notes: "Seller called our number from yellow letter campaign"
+property: "123 Main St, Atlanta, GA 30318"
+---
+```
+
+### Handling Opt-Out Requests
+
+When a seller texts STOP, UNSUBSCRIBE, CANCEL, END, or QUIT:
+
+1. **Immediately** stop all outreach
+2. Send confirmation: *"You've been removed from our contact list. We will not contact you again."*
+3. Create do-not-contact record:
+
+```
+# File: ~/Documents/wholesale-kb/do-not-contact/[phone-last4].md
+
+---
+phone: "+15551234567"
+opt_out_date: "2026-03-02T14:30:00Z"
+opt_out_method: "text"
+opt_out_phrase: "STOP"
+property: "456 Oak Ave, Atlanta, GA 30310"
+---
+```
+
+4. Update deal file status to `do_not_contact`
+5. **Never contact this number again from any channel**
+
+### Safe Outreach Templates
+
+**First text (inbound lead follow-up):**
+```
+Hi [Name], this is [Your Name] with [Company]. You reached out about your
+property at [Address]. I'd love to learn more about your situation and see
+if we can help. Are you available for a quick call? Reply STOP to opt out.
+```
+
+**Follow-up text:**
+```
+Hi [Name], just following up on [Address]. Still interested in a cash offer?
+Reply STOP to opt out.
+```
+
+**Voicemail script:**
+```
+Hi [Name], this is [Your Name] calling about your property at [Address].
+I'm a local investor and may be able to make you a cash offer. Please call
+me back at [Your Number] when you get a chance. Thank you.
+```

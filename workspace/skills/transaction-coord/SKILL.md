@@ -146,3 +146,92 @@ memory_search("21 day closing timeline milestones")
 memory_search("deal falls apart buyer backs out seller backs out")
 memory_search("earnest money dispute resolution")
 ```
+
+---
+
+## Contract Selection Matrix
+
+Use this matrix to determine which contract(s) to use for each deal type.
+
+| Deal Type | Primary Contract | Required Addenda | Notes |
+|-----------|-----------------|------------------|-------|
+| **Cash Purchase + Assignment** | Purchase & Sale Agreement | Assignment of Contract | Most common wholesale deal |
+| **Seller Finance** | Purchase & Sale Agreement | Seller Finance Terms Addendum, Promissory Note | Seller carries the note |
+| **Subject-To** | Purchase & Sale Agreement | Subject-To Disclosure, Loan Assumption Addendum | Buyer takes over existing mortgage |
+| **Hybrid (SF + Sub-To)** | Purchase & Sale Agreement | Both SF and Sub-To addenda | Creative finance combo |
+| **JV Deal** | JV Agreement | Profit Split Addendum | Co-wholesale with another investor |
+| **Double Close** | Two separate PSAs | None (two transactions) | Buy then immediately resell |
+| **Novation** | Novation Agreement | Replaces original PSA | Seller stays on title until close |
+
+### Contract Templates Location
+
+```
+~/Documents/wholesale-kb/contracts/
+├── REAL ESTATE PURCHASE AND SALE AGREEMENT.pdf   ← All deals start here
+├── Assignment_of_Contract.md                      ← Standard wholesale assignment
+├── Addendum to Contract.docx                      ← Seller finance, Subject-To terms
+├── LOI_TEMPLATE_1.pdf                             ← Letter of intent (pre-contract)
+├── JV Agreement.pdf                               ← Joint venture / co-wholesale
+├── Termination Agreement 2.pdf                    ← Cancel a deal cleanly
+└── Partial Payout Agreement.docx                  ← Staged assignment fee payouts
+```
+
+### When to Use Each Contract
+
+**Purchase & Sale Agreement (PSA)**
+- Every deal starts with a PSA between you and the seller
+- **Must include:** "and/or assigns" in the Buyer name field
+- **Must include:** Assignment clause (see Compliance skill)
+- Use for: Cash, Seller Finance, Subject-To, Hybrid deals
+
+**Assignment of Contract**
+- Transfers your PSA rights to the end buyer
+- States your assignment fee clearly
+- Signed by you (Assignor) and end buyer (Assignee)
+- Use for: All standard wholesale assignments
+
+**Seller Finance Terms Addendum**
+- Defines: purchase price, down payment, interest rate, term, monthly payment
+- Attached to PSA as an addendum
+- Use for: Any deal where seller carries financing
+
+**Subject-To Disclosure**
+- Discloses that buyer is taking over existing mortgage
+- Required in most states for legal protection
+- Use for: Any Subject-To deal
+
+**JV Agreement**
+- Defines roles, responsibilities, and profit split between co-wholesalers
+- Use for: Any deal where you're partnering with another investor
+
+### Contract Selection Decision Tree
+
+```
+Is seller carrying financing?
+├── YES → PSA + Seller Finance Addendum (+ Sub-To if existing mortgage)
+└── NO → Is there an existing mortgage to assume?
+         ├── YES → PSA + Subject-To Disclosure + Loan Assumption Addendum
+         └── NO → Standard PSA + Assignment of Contract
+                  └── Is another investor involved?
+                      ├── YES → Also add JV Agreement
+                      └── NO → Done
+```
+
+### Loading Contracts
+
+```
+# Load the right contract for this deal
+memory_get("contracts/REAL ESTATE PURCHASE AND SALE AGREEMENT.pdf")
+memory_get("contracts/Assignment_of_Contract.md")
+
+# For seller finance
+memory_get("contracts/Addendum to Contract.docx")
+
+# For JV deals
+memory_get("contracts/JV Agreement.pdf")
+
+# Search for specific contract language
+memory_search("contract template [deal type] [state]")
+memory_search("assignment clause language")
+memory_search("seller finance terms addendum")
+```
