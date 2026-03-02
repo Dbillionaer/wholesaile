@@ -169,7 +169,7 @@
     },
     telegram: {
       enabled: true,
-      botToken: "YOUR_TELEGRAM_BOT_TOKEN",
+      botToken: "${TELEGRAM_BOT_TOKEN}",
       dmPolicy: "allowlist",
       allowFrom: [],
     },

@@ -2,16 +2,16 @@
   "name": "openclaw",
   "version": "2026.3.1",
   "description": "Multi-channel AI gateway with extensible messaging integrations",
-  "keywords": [],
-  "homepage": "https://github.com/openclaw/openclaw#readme",
+  "keywords": ["wholesale", "real-estate", "ai", "multi-agent"],
+  "homepage": "https://github.com/Dbillionaer/wholesaile#readme",
   "bugs": {
-    "url": "https://github.com/openclaw/openclaw/issues"
+    "url": "https://github.com/Dbillionaer/wholesaile/issues"
   },
   "license": "MIT",
   "author": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openclaw/openclaw.git"
+    "url": "git+https://github.com/Dbillionaer/wholesaile.git"
   },
   "bin": {
     "openclaw": "openclaw.mjs"
