@@ -535,3 +535,168 @@ RESIMPLI_API_KEY=your_key_here
 - [ATTOM Developer Portal](https://api.attomdata.com)
 - [TCPA Compliance Guide](https://www.fcc.gov/rules-political-calls-and-texts)
 
+
+---
+
+## 9️⃣ All-in-One Platforms (Updated Research)
+
+### Comparison Matrix
+
+| Platform | Price | Skip Trace | CRM | D4D | SMS | Dialer | AI Features |
+|----------|-------|------------|-----|-----|-----|--------|-------------|
+| **XLeads** | $97/mo | ✅ Unlimited | ✅ Full | ✅ Yes | ✅ Yes | ✅ Yes | ✅ AI Agents |
+| **PropStream** | $99/mo | ✅ Built-in | ⭐ Basic | ❌ No | ✅ Email | ❌ No | ✅ Higher plans |
+| **DealMachine** | $49-99/mo | ✅ Credits | ⭐ Basic | ✅ Yes | ✅ Yes | ❌ No | ⭐ Limited |
+| **BatchLeads** | $99-199/mo | ✅ Free | ✅ Yes | ✅ Yes | ✅ RVM | ❌ No | ✅ BatchRank |
+| **REsimpli** | $149-299/mo | ✅ Credits | ✅ Full | ✅ Yes | ✅ Yes | ✅ Yes | ✅ AI Agents |
+
+### Detailed Reviews
+
+#### XLeads ⭐⭐⭐⭐⭐ (New Contender!)
+- **Website:** https://xleads.com
+- **Pricing:** ~$97/month (with aggressive promos)
+- **Positioning:** "Best value" all-in-one, cheaper/faster alternative to PropStream/DealMachine combos
+- **Features:**
+  - **Unlimited FREE skip tracing** (major differentiator!)
+  - AI-powered property search & list stacking
+  - Distressed property detection
+  - Full CRM with deal pipeline
+  - Built-in dialer
+  - SMS blasting
+  - E-signing
+  - Workflows/automation
+  - Driving for Dollars mobile app
+  - AI agents for communication
+  - Disposition tools
+- **Best For:** Virtual wholesalers scaling volume
+- **Verdict:** 🔥 HOT - Best value for money, unlimited skip tracing is game-changer
+
+#### PropStream ⭐⭐⭐⭐
+- **Website:** https://propstream.com
+- **Pricing:** ~$99/month
+- **Features:**
+  - **160M+ properties** (largest database)
+  - Nationwide filters: absentee owners, vacancies, equity
+  - Built-in skip tracing
+  - Comps/ARV calculators
+  - Marketing suite (emails, postcards, landing pages)
+  - AI features in higher tiers
+- **Best For:** List pulling + basic outreach
+- **Stack With:** Often paired with dedicated CRM
+- **Verdict:** Classic choice, but may need additional tools
+
+#### DealMachine ⭐⭐⭐⭐
+- **Website:** https://dealmachine.com
+- **Pricing:** $49-99/month
+- **Features:**
+  - **Mobile-first D4D king** (spot properties on the go)
+  - Auto-capture property data
+  - Skip tracing
+  - Lead lists
+  - Automated direct mail
+  - Follow-up sequences
+  - Basic CRM
+- **Best For:** Boots-on-the-ground local sourcing
+- **Limitation:** Less emphasis on massive nationwide data pulls
+- **Verdict:** Best for field work, mobile-driven wholesaling
+
+#### BatchLeads ⭐⭐⭐⭐⭐
+- **Website:** https://batchleads.io
+- **Pricing:** $99-199/month
+- **Features:**
+  - **1-click lists** with 130+ filters
+  - **BatchRank AI** for lead prioritization
+  - **FREE/included skip tracing**
+  - High right-party contact rates
+  - Outbound campaigns (SMS/email/RVM)
+  - CRM features
+  - Strong nationwide coverage
+  - Team support
+- **Best For:** Bulk/wholesale operations, teams
+- **Verdict:** Often wins head-to-heads on data quality & skip accuracy vs PropStream
+
+#### REsimpli ⭐⭐⭐⭐⭐
+- **Website:** https://resimpli.com
+- **Pricing:** $149-299/month
+- **Features:**
+  - **True end-to-end CRM replacement**
+  - Built-in list builder
+  - Skip tracing (free credits included)
+  - Deal pipeline & tasks
+  - AI agents for communications
+  - Dialer/SMS/email/direct mail automation
+  - Bookkeeping
+  - Workflows
+  - **No integrations needed**
+- **Best For:** Wholesalers wanting lead-to-close in one place
+- **Verdict:** Frequently ranked #1 alternative to PropStream in 2026 comparisons
+
+---
+
+### All-in-One Platform Decision Matrix
+
+| If You Need... | Choose | Why |
+|----------------|--------|-----|
+| **Best value + unlimited skip trace** | XLeads | $97/mo, AI agents, everything included |
+| **Largest property database** | PropStream | 160M+ properties |
+| **Mobile D4D focus** | DealMachine | Best mobile app for field work |
+| **Best data quality + team** | BatchLeads | Wins on accuracy, team features |
+| **True end-to-end CRM** | REsimpli | Lead to close in one place |
+
+---
+
+### Cost Comparison (Annual)
+
+| Platform | Monthly | Annual | Skip Trace | Total w/ 10K Traces/mo |
+|----------|---------|--------|------------|------------------------|
+| XLeads | $97 | $1,164 | ✅ Unlimited | **$1,164** |
+| PropStream | $99 | $1,188 | ⚠️ Extra | ~$3,000+ |
+| DealMachine | $99 | $1,188 | ⚠️ Credits | ~$2,500+ |
+| BatchLeads | $149 | $1,788 | ✅ Free | **$1,788** |
+| REsimpli | $199 | $2,388 | ⚠️ Credits | ~$3,000+ |
+
+**💡 Winner for Cost-Effectiveness:** XLeads with unlimited skip tracing
+
+---
+
+### Updated Recommendations
+
+#### Option A: Single Platform (Simplest)
+```
+XLeads ($97/mo)
+├── Skip Tracing (Unlimited)
+├── CRM
+├── SMS/Dialer
+├── D4D App
+├── AI Agents
+└── Disposition Tools
+```
+
+#### Option B: Best-in-Class Stack
+```
+BatchSkipTracing ($0.15/match) + BatchData API + Call Loop ($29/mo)
+└── Total: ~$200-400/mo depending on volume
+   - More control
+   - Better for scaling
+   - Custom integrations with Wholesaile
+```
+
+#### Option C: Hybrid Approach
+```
+XLeads ($97/mo) + Wholesaile Agents
+├── Use XLeads for data + skip tracing
+├── Use Wholesaile for AI agent orchestration
+└── Sync via API
+```
+
+---
+
+### Integration Priority (Revised)
+
+| Priority | Integration | Service | Reason |
+|----------|-------------|---------|--------|
+| 🔴 **1** | All-in-One Platform | XLeads | Best value, unlimited skip trace |
+| 🔴 **2** | Property Data API | BatchData | Backup for XLeads |
+| 🟡 **3** | SMS/Voicemail | Call Loop | Multi-channel outreach |
+| 🟢 **4** | Dashboard | Retool | Deal visualization |
+
