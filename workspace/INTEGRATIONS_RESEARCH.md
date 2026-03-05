@@ -953,3 +953,379 @@ export async function skipTraceWithXLeads(addresses: string[]) {
 - You have **dedicated developers** to maintain automation
 - You're willing to accept **fragility** for cost savings
 
+
+---
+
+## 📚 API Capabilities Documentation
+
+### DealMachine API
+
+**Base URL:** `https://api.dealmachine.com`
+**Documentation:** https://docs.dealmachine.com/
+**Authentication:** Bearer Token (find in Automation → API Docs section)
+**Rate Limits:** 10 requests/second, 5,000 requests/day
+
+#### Available Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| **POST** | `/v1/leads` | Add a new lead |
+| **GET** | `/v1/leads` | List all leads |
+| **GET** | `/v1/leads/{id}` | Get lead by ID |
+| **PUT** | `/v1/leads/{id}` | Update lead |
+| **DELETE** | `/v1/leads/{id}` | Delete lead |
+| **GET** | `/v1/lead-statuses` | Get all lead statuses |
+| **GET** | `/v1/custom-fields` | Get all custom fields |
+| **GET** | `/v1/teams` | Get team info |
+| **GET** | `/v1/team-members` | Get team members |
+
+#### Lead Object Structure
+
+```typescript
+interface DealMachineLead {
+  id: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  status_id: string;
+  custom_fields: Record<string, any>;
+  tags: string[];
+  notes: string;
+  owner_name: string;
+  owner_phone: string;
+  owner_email: string;
+  created_at: string;
+  updated_at: string;
+}
+```
+
+#### Example Request
+
+```bash
+curl -X POST "https://api.dealmachine.com/v1/leads" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "address": "123 Main St",
+    "city": "Atlanta",
+    "state": "GA",
+    "zip": "30301"
+  }'
+```
+
+#### Wholesaile Integration
+
+```typescript
+// workspace/integrations/dealmachine.ts
+export class DealMachineClient {
+  private baseUrl = 'https://api.dealmachine.com';
+  private apiKey: string;
+
+  constructor(apiKey: string) {
+    this.apiKey = apiKey;
+  }
+
+  async addLead(address: Address): Promise<Lead> {
+    const response = await fetch(`${this.baseUrl}/v1/leads`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(address)
+    });
+    return response.json();
+  }
+
+  async updateLeadStatus(leadId: string, statusId: string): Promise<Lead> {
+    const response = await fetch(`${this.baseUrl}/v1/leads/${leadId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ status_id: statusId })
+    });
+    return response.json();
+  }
+
+  async getLeads(params: { status?: string; limit?: number }): Promise<Lead[]> {
+    const url = new URL(`${this.baseUrl}/v1/leads`);
+    Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+    const response = await fetch(url.toString(), {
+      headers: { 'Authorization': `Bearer ${this.apiKey}` }
+    });
+    return response.json();
+  }
+}
+```
+
+---
+
+### BatchLeads API (BatchService)
+
+**Base URL:** `https://api.batchservice.com`
+**Documentation:** https://developer.batchservice.com/docs/batchleads
+**Authentication:** API Key
+
+#### Available Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| **GET** | `/properties` | Search properties |
+| **GET** | `/properties/{id}` | Get property details |
+| **GET** | `/properties/saved` | Get saved properties |
+| **POST** | `/properties/save` | Save property to list |
+| **DELETE** | `/properties/{id}` | Remove saved property |
+| **GET** | `/properties/{id}/tags` | Get property tags |
+| **GET** | `/properties/{id}/activities` | Get property activities |
+| **GET** | `/lists` | Get all lists |
+| **POST** | `/lists` | Create new list |
+| **GET** | `/statuses` | Get all statuses |
+| **GET** | `/agents` | Get agents info |
+
+#### Property Object Structure
+
+```typescript
+interface BatchLeadsProperty {
+  id: string;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+    county: string;
+  };
+  property_details: {
+    beds: number;
+    baths: number;
+    sqft: number;
+    lot_size: number;
+    year_built: number;
+    property_type: string;
+  };
+  ownership: {
+    owner_name: string;
+    mailing_address: string;
+    ownership_type: string;
+  };
+  valuation: {
+    estimated_value: number;
+    arv: number;
+    equity: number;
+    equity_percent: number;
+  };
+  listing: {
+    status: string;
+    list_price: number;
+    days_on_market: number;
+  };
+  tags: string[];
+  status: string;
+  notes: string;
+  activities: Activity[];
+}
+```
+
+#### Example Request
+
+```bash
+curl -X GET "https://api.batchservice.com/properties?city=Atlanta&state=GA" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+---
+
+### BatchData API (Property Data + Skip Tracing)
+
+**Base URL:** `https://api.batchdata.com`
+**Documentation:** https://developer.batchdata.com/
+**Pricing:** $500/mo property data, $2,000/mo skip tracing
+
+#### Available Endpoints
+
+| Category | Method | Endpoint | Description |
+|----------|--------|----------|-------------|
+| **Property** | GET | `/property/{address}` | Get property by address |
+| **Property** | GET | `/property/{id}` | Get property by ID |
+| **Property** | POST | `/property/search` | Search properties |
+| **Property** | POST | `/property/batch` | Batch property lookup |
+| **Ownership** | GET | `/ownership/{address}` | Get ownership info |
+| **Ownership** | GET | `/ownership/{id}/history` | Ownership history |
+| **Valuation** | GET | `/valuation/{address}` | Get property valuation |
+| **Valuation** | GET | `/valuation/{address}/arv` | Get ARV estimate |
+| **Skip Trace** | POST | `/skiptrace/phone` | Find phone numbers |
+| **Skip Trace** | POST | `/skiptrace/email` | Find email addresses |
+| **Skip Trace** | POST | `/skiptrace/batch` | Batch skip tracing |
+| **Comps** | GET | `/comps/{address}` | Get comparables |
+| **Comps** | GET | `/comps/{address}/radius` | Comps within radius |
+| **Market** | GET | `/market/{zip}` | Market data by ZIP |
+| **Market** | GET | `/market/{county}` | Market data by county |
+
+#### Property Data Response
+
+```typescript
+interface BatchDataProperty {
+  id: string;
+  address: {
+    full: string;
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+    county: string;
+    latitude: number;
+    longitude: number;
+  };
+  property: {
+    beds: number;
+    baths: number;
+    sqft: number;
+    lot_sqft: number;
+    year_built: number;
+    property_type: string;
+    style: string;
+    stories: number;
+    garage: boolean;
+    pool: boolean;
+  };
+  ownership: {
+    owner_name: string;
+    owner_type: string;
+    mailing_address: string;
+    phone: string;
+    email: string;
+  };
+  valuation: {
+    estimated_value: number;
+    confidence_score: number;
+    value_low: number;
+    value_high: number;
+    last_updated: string;
+  };
+  tax: {
+    assessed_value: number;
+    tax_amount: number;
+    tax_year: number;
+  };
+  last_sale: {
+    date: string;
+    price: number;
+    deed_type: string;
+  };
+  equity: {
+    amount: number;
+    percent: number;
+  };
+  // 700+ additional data points available
+}
+```
+
+#### Skip Trace Response
+
+```typescript
+interface SkipTraceResult {
+  input: {
+    address: string;
+    owner_name: string;
+  };
+  matches: Array<{
+    name: string;
+    phones: Array<{
+      number: string;
+      type: 'mobile' | 'landline' | 'voip';
+      quality_score: number;
+      do_not_call: boolean;
+    }>;
+    emails: Array<{
+      address: string;
+      quality_score: number;
+    }>;
+    relatives: Array<{
+      name: string;
+      relationship: string;
+    }>;
+  }>;
+  hit_rate: number;
+  confidence: number;
+}
+```
+
+#### Example Requests
+
+```bash
+# Property Search
+curl -X POST "https://api.batchdata.com/property/search" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "city": "Atlanta",
+    "state": "GA",
+    "filters": {
+      "equity_percent": { "min": 30 },
+      "property_type": "single_family",
+      "vacant": true
+    }
+  }'
+
+# Skip Tracing
+curl -X POST "https://api.batchdata.com/skiptrace/batch" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "records": [
+      { "address": "123 Main St, Atlanta, GA 30301", "owner_name": "John Doe" }
+    ]
+  }'
+```
+
+---
+
+### API Comparison Summary
+
+| Feature | DealMachine | BatchLeads | BatchData |
+|---------|-------------|------------|-----------|
+| **Lead Management** | ✅ Full CRUD | ✅ Full CRUD | ❌ |
+| **Property Search** | ❌ | ✅ | ✅ Full |
+| **Skip Tracing** | ✅ Included | ✅ Included | ✅ $2K/mo |
+| **Property Data** | Limited | ✅ Good | ✅ Best (700+ fields) |
+| **ARV/Valuation** | ❌ | ✅ | ✅ |
+| **Market Data** | ❌ | ✅ | ✅ |
+| **Driving for Dollars** | ✅ Best | ❌ | ❌ |
+| **Mobile App** | ✅ Yes | ❌ | ❌ |
+| **API Maturity** | Early | Mature | Mature |
+| **Rate Limits** | 10/sec | Higher | Higher |
+| **Price** | $49-99/mo | $99-199/mo | $500-2,500/mo |
+
+---
+
+### Recommended Integration Strategy for Wholesaile
+
+```typescript
+// workspace/integrations/config.ts
+export const integrationConfig = {
+  // PRIMARY: BatchData for comprehensive property data
+  propertyData: {
+    provider: 'batchdata',
+    baseUrl: 'https://api.batchdata.com',
+    features: ['property', 'ownership', 'valuation', 'comps', 'market']
+  },
+
+  // SECONDARY: BatchLeads for lead management
+  leadManagement: {
+    provider: 'batchleads',
+    baseUrl: 'https://api.batchservice.com',
+    features: ['lists', 'tags', 'statuses', 'activities']
+  },
+
+  // OPTIONAL: DealMachine for D4D mobile workflows
+  driving4Dollars: {
+    provider: 'dealmachine',
+    baseUrl: 'https://api.dealmachine.com',
+    features: ['mobile-d4d', 'field-capture']
+  }
+};
+```
+
