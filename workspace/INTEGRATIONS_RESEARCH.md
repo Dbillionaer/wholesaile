@@ -700,3 +700,256 @@ XLeads ($97/mo) + Wholesaile Agents
 | 🟡 **3** | SMS/Voicemail | Call Loop | Multi-channel outreach |
 | 🟢 **4** | Dashboard | Retool | Deal visualization |
 
+
+---
+
+## 🔌 CRITICAL: API Availability Analysis
+
+> **Updated 2026-03-05** - After deeper research, most all-in-one platforms are **closed ecosystems** without public APIs.
+
+### API Availability Matrix
+
+| Service | Public API | Webhooks | Browser Automation | Integration Difficulty |
+|---------|------------|----------|-------------------|----------------------|
+| **BatchData** | ✅ Full REST API | ✅ Yes | N/A | 🟢 Easy |
+| **BatchSkipTracing** | ✅ REST API | ✅ Yes | N/A | 🟢 Easy |
+| **ATTOM Data** | ✅ Full REST API | ✅ Yes | N/A | 🟢 Easy |
+| **Call Loop** | ✅ REST API | ✅ Yes | N/A | 🟢 Easy |
+| **SkipForce** | ✅ REST API | ⚠️ Limited | N/A | 🟢 Easy |
+| **Estated** | ✅ REST API | ✅ Yes | N/A | 🟢 Easy |
+| **XLeads** | ❌ No public API | ❌ No | ✅ Possible | 🔴 Hard |
+| **PropStream** | ❌ No public API | ❌ No | ✅ Possible | 🔴 Hard |
+| **REsimpli** | ❌ No public API | ❌ No | ✅ Possible | 🔴 Hard |
+| **DealMachine** | ⚠️ Limited | ❌ No | ✅ Possible | 🟡 Medium |
+| **BatchLeads** | ⚠️ Limited | ⚠️ Limited | ✅ Possible | 🟡 Medium |
+
+### Integration Approaches
+
+#### Option A: API-First Stack (Recommended for Wholesaile)
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    WHOLESAIL SYSTEM                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
+│  │ BatchData    │    │ BatchSkip    │    │  Call Loop   │  │
+│  │ Property API │    │ Tracing API  │    │  SMS/VM API  │  │
+│  └──────┬───────┘    └──────┬───────┘    └──────┬───────┘  │
+│         │                   │                   │          │
+│         └───────────────────┼───────────────────┘          │
+│                             ▼                                │
+│                    ┌──────────────┐                         │
+│                    │  Wholesaile  │                         │
+│                    │   Agents     │                         │
+│                    └──────────────┘                         │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+
+Monthly Cost: ~$500-700 (BatchData) + $0.15/match skip + $29 Call Loop
+Integration: Clean TypeScript modules, reliable webhooks
+Maintenance: Low - API contracts are stable
+```
+
+#### Option B: Browser Automation Stack (For Closed Platforms)
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    WHOLESAIL SYSTEM                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌──────────────┐                                           │
+│  │   XLeads /   │  ◄── browser_agent (Playwright)           │
+│  │  PropStream  │      • Login automation                   │
+│  │  REsimpli    │      • Screen scraping                    │
+│  └──────────────┘      • Form filling                        │
+│                        • Data extraction                     │
+│                             │                                │
+│                             ▼                                │
+│                    ┌──────────────┐                         │
+│                    │  Wholesaile  │                         │
+│                    │   Agents     │                         │
+│                    └──────────────┘                         │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+
+Monthly Cost: $97-299 (platform only)
+Integration: Fragile - requires browser automation maintenance
+Risks: 
+  • Platform UI changes break automation
+  • Session management complexity
+  • Rate limiting / CAPTCHAs
+  • Terms of Service concerns
+Maintenance: HIGH - must update when platforms change
+```
+
+#### Option C: Hybrid Approach (Best of Both Worlds)
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    WHOLESAIL SYSTEM                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
+│  │ BatchData    │    │   XLeads     │    │  Call Loop   │  │
+│  │ Property API │    │ (Browser)    │    │  SMS/VM API  │  │
+│  │  (API) ✅    │    │ Skip Trace   │    │   (API) ✅   │  │
+│  └──────────────┘    └──────────────┘    └──────────────┘  │
+│                             │                                │
+│                             ▼                                │
+│                    ┌──────────────┐                         │
+│                    │  Wholesaile  │                         │
+│                    │   Agents     │                         │
+│                    └──────────────┘                         │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+
+Use Browser Automation ONLY for:
+  • Skip tracing (XLeads unlimited)
+  • List building (once/week batch)
+  
+Use APIs for:
+  • Property data (BatchData)
+  • SMS/Voicemail (Call Loop)
+  • Lead notifications (webhooks)
+```
+
+---
+
+## 🏗️ Recommended Integration Architecture
+
+### Primary Recommendation: API-First with Optional Browser Layer
+
+```typescript
+// workspace/integrations/config.ts
+export const integrations = {
+  // CORE: Always use APIs for reliability
+  propertyData: {
+    provider: 'batchdata',
+    apiKey: process.env.BATCHDATA_API_KEY,
+    features: ['comps', 'ownership', 'equity', 'vacancy']
+  },
+  
+  skipTracing: {
+    // Option 1: API (reliable)
+    provider: 'batchskiptracing',
+    apiKey: process.env.BATCH_SKIP_TRACING_API_KEY,
+    pricePerMatch: 0.15,
+    
+    // Option 2: Browser automation (cheaper but fragile)
+    // provider: 'xleads-browser',
+    // requiresBrowserAgent: true
+  },
+  
+  smsVoicemail: {
+    provider: 'callloop',
+    apiKey: process.env.CALLLOOP_API_KEY,
+    features: ['sms', 'ringless-vm', 'drip-campaigns']
+  },
+  
+  // OPTIONAL: Browser automation for closed platforms
+  browserAutomation: {
+    enabled: false, // Set true if using XLeads/PropStream
+    platforms: ['xleads'],
+    tasks: ['skip-tracing', 'list-building'],
+    schedule: 'weekly' // Reduce automation fragility
+  }
+};
+```
+
+### Implementation Priority
+
+| Priority | Service | Type | Why |
+|----------|---------|------|-----|
+| 🔴 **1** | BatchData | API | Property data is core functionality |
+| 🔴 **2** | Call Loop | API | Lead response automation |
+| 🟡 **3** | BatchSkipTracing | API | Reliable skip tracing |
+| 🟢 **4** | XLeads (Browser) | Browser | Optional cost savings |
+
+---
+
+## 💰 Cost Comparison: API vs Browser Automation
+
+### API-First Stack (Recommended)
+| Service | Monthly Cost | Notes |
+|---------|--------------|-------|
+| BatchData Property API | $500/mo | 155M+ properties |
+| BatchSkipTracing | ~$150/mo | 1,000 matches @ $0.15 |
+| Call Loop | $29/mo | SMS + Voicemail |
+| **Total** | **~$679/mo** | Reliable, maintainable |
+
+### Browser Automation Stack (Higher Risk)
+| Service | Monthly Cost | Notes |
+|---------|--------------|-------|
+| XLeads | $97/mo | Unlimited skip tracing |
+| Development | ~$2,000 | One-time browser automation |
+| Maintenance | ~$500/mo | Fix broken automation |
+| **Total** | **~$597/mo** | Fragile, requires constant updates |
+
+### Break-Even Analysis
+- API stack is more expensive but **10x more reliable**
+- Browser automation requires **ongoing maintenance** (2-4 hrs/week)
+- **Recommendation:** Start with API stack, add browser automation only if cost savings justify maintenance burden
+
+---
+
+## 🔧 Browser Automation Implementation (If Needed)
+
+If you choose to use browser automation for closed platforms:
+
+```typescript
+// workspace/integrations/browser/xleads-agent.ts
+import { browser_agent } from '../../tools';
+
+export async function skipTraceWithXLeads(addresses: string[]) {
+  const result = await browser_agent({
+    message: `
+      1. Log into XLeads at https://xleads.com/login
+         - Email: {XLEADS_EMAIL}
+         - Password: {XLEADS_PASSWORD}
+      2. Navigate to Skip Tracing section
+      3. Upload CSV with ${addresses.length} addresses
+      4. Wait for processing (may take 5-10 minutes)
+      5. Download results CSV
+      6. Return the file path
+      7. End task
+    `,
+    reset: true // New session each time
+  });
+  
+  return result;
+}
+```
+
+### Browser Automation Risks
+
+| Risk | Impact | Mitigation |
+|------|--------|------------|
+| Platform UI changes | Automation breaks | Schedule weekly tests |
+| CAPTCHAs | Blocks automation | Use 2Captcha/DeathByCaptcha |
+| Session timeouts | Login failures | Re-authentication logic |
+| Rate limiting | Blocked account | Throttle requests |
+| ToS violation | Account ban | Review terms carefully |
+
+---
+
+## ✅ Final Recommendation
+
+### For Wholesaile, Use:
+
+1. **BatchData API** - Property data ($500/mo)
+2. **BatchSkipTracing API** - Skip tracing ($0.15/match)
+3. **Call Loop API** - SMS/Voicemail ($29/mo)
+4. **Skip browser automation** unless you have dedicated dev resources
+
+### Why API-First?
+
+- ✅ Reliable integration with OpenClaw agents
+- ✅ Predictable costs and performance
+- ✅ Easy debugging and monitoring
+- ✅ Scales without maintenance burden
+- ✅ No ToS concerns
+
+### When to Consider Browser Automation?
+
+- You process **10,000+ leads/month** and cost difference is significant
+- You have **dedicated developers** to maintain automation
+- You're willing to accept **fragility** for cost savings
+
