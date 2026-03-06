@@ -272,6 +272,26 @@
     ],
   },
 
+
+  // ─── CAMOFOX BROWSER PLUGIN ─────────────────────────────────────────────
+  // Anti-detection browser automation for accessing closed platforms
+  // Enables Wholesaile to automate XLeads, PropStream, REsimpli, etc.
+  // Docs: https://github.com/Dbillionaer/camofox-browser
+  plugins: {
+    "camofox-browser": {
+      enabled: true,
+      config: {
+        port: 9377,
+        autoStart: true,
+        maxSessions: 5,
+        maxTabsPerSession: 3,
+        sessionTimeoutMs: 600000,
+        browserIdleTimeoutMs: 300000,
+        maxOldSpaceSize: 128,
+      },
+    },
+  },
+
   gateway: {
     port: 18789,
     bind: "loopback",
