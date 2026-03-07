@@ -2,6 +2,7 @@
 name: summarize
 description: Summarize or extract text/transcripts from URLs, podcasts, and local files (great fallback for “transcribe this YouTube/video”).
 homepage: https://summarize.sh
+tags: ['ai', 'summarization', 'transcription', 'extraction']
 metadata:
   {
     "openclaw":

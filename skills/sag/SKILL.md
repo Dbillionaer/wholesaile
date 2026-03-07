@@ -2,6 +2,7 @@
 name: sag
 description: ElevenLabs text-to-speech with mac-style say UX.
 homepage: https://sag.sh
+tags: ['media', 'audio', 'tts', 'ai', 'elevenlabs']
 metadata:
   {
     "openclaw":

@@ -2,6 +2,7 @@
 name: sonoscli
 description: Control Sonos speakers (discover/status/play/volume/group).
 homepage: https://sonoscli.sh
+tags: ['media', 'audio', 'smart-home', 'speakers']
 metadata:
   {
     "openclaw":

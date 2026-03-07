@@ -1,6 +1,7 @@
 ---
 name: transaction-coord
 description: "Transaction coordination agent. Manages closing process and documents."
+tags: ['real-estate', 'wholesaling', 'closing', 'transactions']
 metadata:
   openclaw:
     emoji: "📝"

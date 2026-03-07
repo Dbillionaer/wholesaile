@@ -2,6 +2,7 @@
 name: eightctl
 description: Control Eight Sleep pods (status, temperature, alarms, schedules).
 homepage: https://eightctl.sh
+tags: ['smart-home', 'iot', 'health', 'sleep']
 metadata:
   {
     "openclaw":

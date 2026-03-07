@@ -2,6 +2,7 @@
 name: blogwatcher
 description: Monitor blogs and RSS/Atom feeds for updates using the blogwatcher CLI.
 homepage: https://github.com/Hyaxia/blogwatcher
+tags: ['utilities', 'monitoring', 'rss', 'blogs']
 metadata:
   {
     "openclaw":

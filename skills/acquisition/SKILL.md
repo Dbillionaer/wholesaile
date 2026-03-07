@@ -1,6 +1,7 @@
 ---
 name: acquisition
 description: "Seller contact and negotiation agent. Handles outreach and secures purchase agreements."
+tags: ['real-estate', 'wholesaling', 'negotiation', 'sellers']
 metadata:
   openclaw:
     emoji: "🤝"

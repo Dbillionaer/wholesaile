@@ -2,6 +2,7 @@
 name: oracle
 description: Best practices for using the oracle CLI (prompt + file bundling, engines, sessions, and file attachment patterns).
 homepage: https://askoracle.dev
+tags: ['ai', 'llm', 'best-practices', 'development']
 metadata:
   {
     "openclaw":

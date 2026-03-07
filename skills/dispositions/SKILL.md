@@ -1,6 +1,7 @@
 ---
 name: dispositions
 description: "Investor relations agent. Markets deals to buyers and manages buyer list."
+tags: ['real-estate', 'wholesaling', 'investors', 'marketing']
 metadata:
   openclaw:
     emoji: "💰"

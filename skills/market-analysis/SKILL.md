@@ -1,6 +1,7 @@
 ---
 name: market-analysis
 description: "Market analysis agent for wholesale real estate. Calculates ARV, MAO, and provides buy recommendations."
+tags: ['real-estate', 'wholesaling', 'analysis', 'arv', 'comps']
 metadata:
   openclaw:
     emoji: "📊"

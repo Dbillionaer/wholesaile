@@ -1,6 +1,7 @@
 ---
 name: lead-scout
 description: "Lead generation agent for wholesale real estate. Finds distressed properties and motivated sellers."
+tags: ['real-estate', 'wholesaling', 'leads', 'prospecting']
 metadata:
   openclaw:
     emoji: "🔍"

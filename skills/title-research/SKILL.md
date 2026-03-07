@@ -1,6 +1,7 @@
 ---
 name: title-research
 description: "Title and due diligence agent. Verifies clear title and researches liens."
+tags: ['real-estate', 'wholesaling', 'title', 'liens', 'legal']
 metadata:
   openclaw:
     emoji: "📋"
